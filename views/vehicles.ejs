@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Vehicles</title>
+  </head>
+  <body>
+    <h1>Vehicle Inventory</h1>
+    <ul>
+      <% vehicles.forEach(v => { %>
+        <li>
+          <a href="/vehicles/<%= v.id %>"><strong><%= v.title %></strong></a>
+          — $<%= v.price %>
+        </li>
+      <% }) %>
+    </ul>
+  </body>
+</html>

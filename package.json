@@ -1,0 +1,31 @@
+{
+  "name": "cse-340-personalproject",
+  "version": "1.0.0",
+  "description": "Car dealership final project for CSE 340",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sil24040/CSE-340-PersonalProject.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sil24040/CSE-340-PersonalProject/issues"
+  },
+  "homepage": "https://github.com/sil24040/CSE-340-PersonalProject#readme",
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "pg": "^8.20.0",
+    "ejs": "^3.1.9"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
