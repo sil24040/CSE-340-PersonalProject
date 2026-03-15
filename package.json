@@ -21,11 +21,12 @@
   "homepage": "https://github.com/sil24040/CSE-340-PersonalProject#readme",
   "dependencies": {
     "dotenv": "^17.3.1",
+    "ejs": "^3.1.9",
     "express": "^5.2.1",
-    "pg": "^8.20.0",
-    "ejs": "^3.1.9"
+    "pg": "^8.20.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.14"
+    "nodemon": "^3.1.14",
+    "pre-commit": "^1.2.2"
   }
 }
