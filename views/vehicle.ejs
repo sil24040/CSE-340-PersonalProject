@@ -1,12 +1,8 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 <head>
   <meta charset="utf-8" />
   <title><%= vehicle.title %></title>
-  <style>
-    body { font-family: Georgia, "Times New Roman", serif; margin: 30px; }
-    h1 { font-size: 48px; }
-  </style>
 </head>
 <body>
   <h1><%= vehicle.title %></h1>
@@ -15,6 +11,60 @@
 
   <p><strong>Description:</strong></p>
   <p><%= vehicle.description %></p>
+
+  <hr>
+
+  <h2>Reviews</h2>
+
+  <% if (reviews && reviews.length > 0) { %>
+    <% reviews.forEach(review => { %>
+      <div style="margin-bottom: 20px;">
+        <p><strong><%= review.name %></strong></p>
+        <p>Rating: <%= review.rating %> / 5</p>
+        <p><%= review.comment %></p>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <p>No reviews yet.</p>
+  <% } %>
+
+  <% if (currentUser) { %>
+    <hr>
+    <h3>Leave a Review</h3>
+
+    <form method="POST" action="/vehicles/<%= vehicle.id %>/reviews">
+      <div>
+        <label>Rating:</label>
+        <select name="rating" required>
+          <option value="5">5</option>
+          <option value="4">4</option>
+          <option value="3">3</option>
+          <option value="2">2</option>
+          <option value="1">1</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Comment:</label>
+        <br>
+        <textarea name="comment" rows="4" cols="40" required></textarea>
+      </div>
+
+      <button type="submit">Submit Review</button>
+    </form>
+
+    <hr>
+
+    <h2>Request Service</h2>
+
+    <form method="POST" action="/vehicles/<%= vehicle.id %>/request">
+      <textarea name="description" rows="4" cols="40" required></textarea>
+      <br><br>
+      <button type="submit">Submit Request</button>
+    </form>
+  <% } else { %>
+    <p><a href="/login">Login</a> to leave a review or request service.</p>
+  <% } %>
 
   <p><a href="/vehicles">Back to inventory</a></p>
 </body>

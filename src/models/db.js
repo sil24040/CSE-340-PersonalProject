@@ -6,15 +6,21 @@ dotenv.config()
 
 const { Pool } = pg
 
+const certPath = "./bin/byuicse-psql-cert.pem"
+
+let sslConfig = false
+
+if (fs.existsSync(certPath)) {
+  sslConfig = {
+    rejectUnauthorized: false,
+    ca: fs.readFileSync(certPath).toString()
+  }
+}
+
 const pool = new Pool({
   connectionString: process.env.DB_URL,
-  ssl: {
-    rejectUnauthorized: false,
-    // only try to load the certificate file if it exists
-    ca: fs.existsSync("./bin/byuicse-psql-cert.pem")
-      ? fs.readFileSync("./bin/byuicse-psql-cert.pem").toString()
-      : undefined
-  }
+  ssl: sslConfig
 })
 
 export const query = (text, params) => pool.query(text, params)
+export { pool }

@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Employee Dashboard</title>
+</head>
+<body>
+  <h1>Service Requests</h1>
+
+  <% if (requests && requests.length > 0) { %>
+    <% requests.forEach(r => { %>
+      <div style="border:1px solid black; margin:15px; padding:10px;">
+        <p><strong>User:</strong> <%= r.name %></p>
+        <p><strong>Vehicle:</strong> <%= r.title %></p>
+        <p><strong>Description:</strong> <%= r.description %></p>
+        <p><strong>Status:</strong> <%= r.status %></p>
+
+        <form method="POST" action="/requests/<%= r.id %>/status">
+          <select name="status" required>
+            <option value="Submitted" <%= r.status === 'Submitted' ? 'selected' : '' %>>Submitted</option>
+            <option value="In Progress" <%= r.status === 'In Progress' ? 'selected' : '' %>>In Progress</option>
+            <option value="Completed" <%= r.status === 'Completed' ? 'selected' : '' %>>Completed</option>
+          </select>
+          <button type="submit">Update</button>
+        </form>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <p>No service requests yet.</p>
+  <% } %>
+
+  <p><a href="/vehicles">Back to inventory</a></p>
+</body>
+</html>
