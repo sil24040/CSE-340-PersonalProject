@@ -3,31 +3,91 @@
 <head>
   <meta charset="utf-8" />
   <title>Vehicle Inventory</title>
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-  <p>
-    <a href="/vehicles">Home</a> |
-    <a href="/employee">Employee Dashboard</a> |
-    <a href="/contact">Contact</a> |
+
+  <nav class="nav">
+    <a href="/vehicles">Home</a>
+    <a href="/profile">Profile</a>
+    <a href="/employee">Employee Dashboard</a>
+    <a href="/owner">Owner Dashboard</a>
+    <a href="/contact">Contact</a>
+
     <% if (currentUser) { %>
-      <span>Logged in as <%= currentUser.name %></span> |
+      <span class="small-muted">Logged in as <strong><%= currentUser.name %></strong></span>
       <a href="/logout">Logout</a>
     <% } else { %>
-      <a href="/login">Login</a> |
+      <a href="/login">Login</a>
       <a href="/register">Register</a>
     <% } %>
-  </p>
+  </nav>
 
-  <h1>Vehicle Inventory</h1>
+  <main class="container">
 
-  <ul>
-    <% vehicles.forEach(vehicle => { %>
-      <li>
-        <a href="/vehicles/<%= vehicle.id %>">
-          <%= vehicle.title %> - $<%= vehicle.price %>
-        </a>
-      </li>
-    <% }) %>
-  </ul>
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Car Dealership Inventory</p>
+        <h1>Find your next vehicle</h1>
+        <p class="hero-text">
+          Browse our inventory, view vehicle details, leave reviews, and request service in one place.
+        </p>
+      </div>
+
+      <div class="hero-actions">
+        <a class="btn" href="#inventory">View Inventory</a>
+        <a class="btn secondary" href="/contact">Contact Us</a>
+      </div>
+    </section>
+
+    <section class="stats">
+      <div class="stat-card">
+        <strong><%= vehicles.length %></strong>
+        <span>Vehicles Available</span>
+      </div>
+      <div class="stat-card">
+        <strong>3</strong>
+        <span>User Roles</span>
+      </div>
+      <div class="stat-card">
+        <strong>24/7</strong>
+        <span>Online Access</span>
+      </div>
+    </section>
+
+    <section id="inventory">
+      <h2 class="section-title">Inventory</h2>
+
+      <% if (vehicles.length > 0) { %>
+        <div class="vehicle-grid">
+          <% vehicles.forEach(vehicle => { %>
+            <article class="card vehicle-card">
+              <div class="vehicle-card-header">
+                <h3><%= vehicle.title %></h3>
+                <% if (vehicle.available) { %>
+                  <span class="badge badge-available">Available</span>
+                <% } else { %>
+                  <span class="badge badge-unavailable">Unavailable</span>
+                <% } %>
+              </div>
+
+              <p class="price">$<%= Number(vehicle.price).toFixed(2) %></p>
+
+              <p class="small-muted">
+                <%= vehicle.description || "No description available." %>
+              </p>
+
+              <div class="card-actions">
+                <a class="btn" href="/vehicles/<%= vehicle.id %>">View Details</a>
+              </div>
+            </article>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <p>No vehicles available right now.</p>
+      <% } %>
+    </section>
+
+  </main>
 </body>
 </html>

@@ -2,27 +2,50 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>Contact Us</title>
+  <title>Contact</title>
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-  <h1>Contact Us</h1>
 
-  <form method="POST" action="/contact">
-    <div>
-      <input name="name" placeholder="Name" required>
+  <nav class="nav">
+    <a href="/vehicles">Home</a>
+    <a href="/profile">Profile</a>
+    <a href="/employee">Employee Dashboard</a>
+    <a href="/owner">Owner Dashboard</a>
+    <a href="/contact">Contact</a>
+
+    <% if (currentUser) { %>
+      <span class="small-muted">Logged in as <strong><%= currentUser.name %></strong></span>
+      <a href="/logout">Logout</a>
+    <% } else { %>
+      <a href="/login">Login</a>
+      <a href="/register">Register</a>
+    <% } %>
+  </nav>
+
+  <main class="container narrow">
+    <div class="hero" style="display:block;">
+      <p class="eyebrow">Get in touch</p>
+      <h1>Contact Us</h1>
+      <p class="hero-text">Send a message and we will respond as soon as possible.</p>
     </div>
 
-    <div>
-      <input type="email" name="email" placeholder="Email" required>
+    <div class="card">
+      <form method="POST" action="/contact">
+        <label>Name</label>
+        <input name="name" placeholder="Name" required>
+
+        <label>Email</label>
+        <input type="email" name="email" placeholder="Email" required>
+
+        <label>Message</label>
+        <textarea name="message" placeholder="Message" required></textarea>
+
+        <button type="submit">Send Message</button>
+      </form>
     </div>
 
-    <div>
-      <textarea name="message" rows="5" cols="40" placeholder="Message" required></textarea>
-    </div>
-
-    <button type="submit">Send</button>
-  </form>
-
-  <p><a href="/vehicles">Back to inventory</a></p>
+    <p><a href="/vehicles">Back to inventory</a></p>
+  </main>
 </body>
 </html>

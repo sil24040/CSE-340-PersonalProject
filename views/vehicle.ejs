@@ -3,69 +3,89 @@
 <head>
   <meta charset="utf-8" />
   <title><%= vehicle.title %></title>
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-  <h1><%= vehicle.title %></h1>
 
-  <p><strong>Price:</strong> $<%= vehicle.price %></p>
+  <nav class="nav">
+    <a href="/vehicles">Home</a>
+    <a href="/profile">Profile</a>
+    <a href="/employee">Employee Dashboard</a>
+    <a href="/owner">Owner Dashboard</a>
+    <a href="/contact">Contact</a>
 
-  <p><strong>Description:</strong></p>
-  <p><%= vehicle.description %></p>
+    <% if (currentUser) { %>
+      <span class="small-muted">Logged in as <strong><%= currentUser.name %></strong></span>
+      <a href="/logout">Logout</a>
+    <% } else { %>
+      <a href="/login">Login</a>
+      <a href="/register">Register</a>
+    <% } %>
+  </nav>
 
-  <hr>
+  <main class="container">
 
-  <h2>Reviews</h2>
-
-  <% if (reviews && reviews.length > 0) { %>
-    <% reviews.forEach(review => { %>
-      <div style="margin-bottom: 20px;">
-        <p><strong><%= review.name %></strong></p>
-        <p>Rating: <%= review.rating %> / 5</p>
-        <p><%= review.comment %></p>
-      </div>
-    <% }) %>
-  <% } else { %>
-    <p>No reviews yet.</p>
-  <% } %>
-
-  <% if (currentUser) { %>
-    <hr>
-    <h3>Leave a Review</h3>
-
-    <form method="POST" action="/vehicles/<%= vehicle.id %>/reviews">
+    <div class="hero">
       <div>
-        <label>Rating:</label>
-        <select name="rating" required>
-          <option value="5">5</option>
-          <option value="4">4</option>
-          <option value="3">3</option>
-          <option value="2">2</option>
-          <option value="1">1</option>
-        </select>
+        <p class="eyebrow">Vehicle Details</p>
+        <h1><%= vehicle.title %></h1>
+        <p class="hero-text"><strong>Price:</strong> $<%= vehicle.price %></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title">Description</h2>
+      <p><%= vehicle.description %></p>
+    </div>
+
+    <h2 class="section-title">Reviews</h2>
+
+    <% if (reviews && reviews.length > 0) { %>
+      <% reviews.forEach(review => { %>
+        <div class="card">
+          <p><strong><%= review.name %></strong></p>
+          <p>Rating: <%= review.rating %> / 5</p>
+          <p><%= review.comment %></p>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <p>No reviews yet.</p>
+    <% } %>
+
+    <% if (currentUser) { %>
+      <div class="card">
+        <h3>Leave Review</h3>
+        <form method="POST" action="/vehicles/<%= vehicle.id %>/reviews">
+          <label>Rating</label>
+          <select name="rating" required>
+            <option value="5">5</option>
+            <option value="4">4</option>
+            <option value="3">3</option>
+            <option value="2">2</option>
+            <option value="1">1</option>
+          </select>
+
+          <label>Comment</label>
+          <textarea name="comment" required></textarea>
+
+          <button type="submit">Submit Review</button>
+        </form>
       </div>
 
-      <div>
-        <label>Comment:</label>
-        <br>
-        <textarea name="comment" rows="4" cols="40" required></textarea>
+      <div class="card">
+        <h3>Request Service</h3>
+        <form method="POST" action="/vehicles/<%= vehicle.id %>/request">
+          <label>Description</label>
+          <textarea name="description" required></textarea>
+          <button type="submit">Submit Request</button>
+        </form>
       </div>
+    <% } else { %>
+      <div class="card">
+        <p><a href="/login">Login</a> to leave a review or request service.</p>
+      </div>
+    <% } %>
 
-      <button type="submit">Submit Review</button>
-    </form>
-
-    <hr>
-
-    <h2>Request Service</h2>
-
-    <form method="POST" action="/vehicles/<%= vehicle.id %>/request">
-      <textarea name="description" rows="4" cols="40" required></textarea>
-      <br><br>
-      <button type="submit">Submit Request</button>
-    </form>
-  <% } else { %>
-    <p><a href="/login">Login</a> to leave a review or request service.</p>
-  <% } %>
-
-  <p><a href="/vehicles">Back to inventory</a></p>
+  </main>
 </body>
 </html>

@@ -1,0 +1,156 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Owner Dashboard</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="/vehicles">Home</a>
+    <a href="/profile">Profile</a>
+    <a href="/employee">Employee Dashboard</a>
+    <a href="/owner">Owner Dashboard</a>
+    <a href="/contact">Contact</a>
+
+    <% if (currentUser) { %>
+      <span class="small-muted">Logged in as <strong><%= currentUser.name %></strong></span>
+      <a href="/logout">Logout</a>
+    <% } else { %>
+      <a href="/login">Login</a>
+      <a href="/register">Register</a>
+    <% } %>
+  </nav>
+
+  <main class="container">
+    <div class="hero">
+      <div>
+        <p class="eyebrow">Owner tools</p>
+        <h1>Owner Dashboard</h1>
+        <p class="hero-text">Manage users, categories, vehicles, and review service requests.</p>
+      </div>
+    </div>
+
+    <h2 class="section-title">Users</h2>
+    <div class="table-wrap">
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Change Role</th>
+        </tr>
+        <% users.forEach(user => { %>
+          <tr>
+            <td><%= user.name %></td>
+            <td><%= user.email %></td>
+            <td><%= user.role %></td>
+            <td>
+              <form method="POST" action="/owner/users/<%= user.id %>/role">
+                <select name="role">
+                  <option value="user" <%= user.role === "user" ? "selected" : "" %>>user</option>
+                  <option value="employee" <%= user.role === "employee" ? "selected" : "" %>>employee</option>
+                  <option value="owner" <%= user.role === "owner" ? "selected" : "" %>>owner</option>
+                </select>
+                <button type="submit">Update</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </table>
+    </div>
+
+    <h2 class="section-title">Categories</h2>
+
+    <div class="card">
+      <form method="POST" action="/owner/categories">
+        <label>New Category</label>
+        <input name="name" placeholder="Category name" required>
+        <button type="submit">Add Category</button>
+      </form>
+    </div>
+
+    <% categories.forEach(category => { %>
+      <div class="card">
+        <form method="POST" action="/owner/categories/<%= category.id %>/edit">
+          <label>Edit Category</label>
+          <input name="name" value="<%= category.name %>" required>
+          <button type="submit">Save</button>
+        </form>
+
+        <form method="POST" action="/owner/categories/<%= category.id %>/delete" onsubmit="return confirm('Delete this category?');">
+          <button type="submit">Delete</button>
+        </form>
+      </div>
+    <% }) %>
+
+    <h2 class="section-title">Vehicles</h2>
+
+    <div class="card">
+      <form method="POST" action="/owner/vehicles">
+        <label>Title</label>
+        <input name="title" placeholder="Vehicle title" required>
+
+        <label>Description</label>
+        <textarea name="description" placeholder="Description"></textarea>
+
+        <label>Price</label>
+        <input name="price" type="number" step="0.01" placeholder="Price" required>
+
+        <label>Category ID</label>
+        <input name="category_id" type="number" placeholder="Category ID">
+
+        <label>Status</label>
+        <select name="available">
+          <option value="true">Available</option>
+          <option value="false">Not available</option>
+        </select>
+
+        <button type="submit">Add Vehicle</button>
+      </form>
+    </div>
+
+    <% vehicles.forEach(vehicle => { %>
+      <div class="card">
+        <form method="POST" action="/owner/vehicles/<%= vehicle.id %>/edit">
+          <label>Title</label>
+          <input name="title" value="<%= vehicle.title %>" required>
+
+          <label>Description</label>
+          <textarea name="description"><%= vehicle.description || '' %></textarea>
+
+          <label>Price</label>
+          <input name="price" type="number" step="0.01" value="<%= vehicle.price %>" required>
+
+          <label>Category ID</label>
+          <input name="category_id" type="number" value="<%= vehicle.category_id || '' %>">
+
+          <label>Status</label>
+          <select name="available">
+            <option value="true" <%= vehicle.available ? "selected" : "" %>>Available</option>
+            <option value="false" <%= !vehicle.available ? "selected" : "" %>>Not available</option>
+          </select>
+
+          <button type="submit">Save</button>
+        </form>
+
+        <form method="POST" action="/owner/vehicles/<%= vehicle.id %>/delete" onsubmit="return confirm('Delete this vehicle?');">
+          <button type="submit">Delete</button>
+        </form>
+      </div>
+    <% }) %>
+
+    <h2 class="section-title">Recent Service Requests</h2>
+
+    <% requests.forEach(r => { %>
+      <div class="card">
+        <p><strong>User:</strong> <%= r.name %></p>
+        <p><strong>Vehicle:</strong> <%= r.title %></p>
+        <p><strong>Status:</strong> <%= r.status %></p>
+        <p><strong>Description:</strong> <%= r.description %></p>
+      </div>
+    <% }) %>
+  </main>
+</body>
+</html>
