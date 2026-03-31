@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Error</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <%- include('partials/nav') %>
+  <main class="container narrow">
+    <div class="hero" style="display:block;">
+      <p class="eyebrow">Oops</p>
+      <h1>Something went wrong</h1>
+      <p class="hero-text"><%= message || "An unexpected error occurred." %></p>
+    </div>
+    <div class="card">
+      <a class="btn" href="/vehicles">Back to Home</a>
+    </div>
+  </main>
+</body>
+</html>
