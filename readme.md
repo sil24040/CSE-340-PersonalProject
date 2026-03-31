@@ -1,6 +1,12 @@
-# 🚗 CSE 340 Personal Project - Car Dealership
+# 🚗 CSE 340 Final Project - Car Dealership
 
-This project is a full-stack car dealership web application built using **Node.js, Express, PostgreSQL, and EJS**. It allows users to browse vehicles, leave reviews, submit service requests, and provides role-based dashboards for employees and owners.
+A full-stack used car dealership web application built with **Node.js, Express, PostgreSQL, and EJS**. Users can browse vehicles, leave reviews, and submit service requests. Employees and owners have dashboards for managing the platform.
+
+---
+
+## 📋 Project Description
+
+This site serves as a used car dealership platform where customers can browse inventory, submit service requests, and leave vehicle reviews. Employees manage service requests and moderate content. The owner has full control over all system data.
 
 ---
 
@@ -10,14 +16,14 @@ This project is a full-stack car dealership web application built using **Node.j
 - Password hashing with bcrypt
 - Session-based authentication
 - Role-based access control (user, employee, owner)
-- Vehicle inventory page
-- Vehicle detail page
-- Reviews system (per vehicle)
-- Service request system
-- Employee dashboard (manage service requests)
-- Owner dashboard (manage users, vehicles, categories)
-- Contact form
-- Profile update page
+- Vehicle inventory page with availability status
+- Vehicle detail page with reviews
+- Reviews system — users can create, edit, and delete their own reviews
+- Service request system with status tracking
+- Employee dashboard — manage requests, vehicles, reviews, contact messages
+- Owner dashboard — manage users, vehicles, categories
+- Contact form (saved to database)
+- Profile page with service request history
 
 ---
 
@@ -26,43 +32,37 @@ This project is a full-stack car dealership web application built using **Node.j
 ### 🔹 User
 - Browse vehicles
 - View vehicle details
-- Leave reviews
+- Leave, edit, and delete their own reviews
 - Submit service requests
-- Update profile
+- View service request history and status
+- Update profile (name, email, password)
 
 ### 🔹 Employee
-- View all service requests
-- Update service request status
+- Everything a user can do, plus:
+- View and update service request status
+- Add notes to service requests
+- Edit vehicle details (price, description, availability)
+- Delete inappropriate reviews
+- View contact form submissions
 
 ### 🔹 Owner
-- Full access to the system
-- Manage users and roles
-- Manage vehicles
-- Manage categories
-- View all service requests
+- Everything an employee can do, plus:
+- Add, edit, and delete vehicles
+- Add, edit, and delete vehicle categories
+- Manage user roles
+- Delete users
 
 ---
 
 ## 🗄 Database Tables
 
-- **users** – stores user accounts and roles  
-- **vehicles** – stores vehicle inventory  
-- **reviews** – stores user reviews for vehicles  
-- **service_requests** – stores service requests  
-- **contact_messages** – stores contact form messages  
-- **categories** – stores vehicle categories  
-- **vehicle_images** – stores vehicle images  
-
----
-
-## 🔗 Database Relationships
-
-- A **user** can create many **reviews**
-- A **user** can create many **service requests**
-- A **vehicle** can have many **reviews**
-- A **vehicle** can have many **service requests**
-- Each **review** belongs to one **user** and one **vehicle**
-- Each **service request** belongs to one **user** and one **vehicle**
+- **users** – stores user accounts and roles
+- **vehicles** – stores vehicle inventory
+- **categories** – stores vehicle categories
+- **reviews** – stores user reviews for vehicles
+- **service_requests** – stores service requests with status and notes
+- **contact_messages** – stores contact form submissions
+- **vehicle_images** – stores vehicle image references
 
 ---
 
@@ -74,24 +74,18 @@ This project is a full-stack car dealership web application built using **Node.j
 
 ## 👤 Test Accounts
 
-Use these accounts to test different roles:
+Use `P@$$w0rd!` as the password for all test accounts.
 
-- **Owner**  
-  Email: sdasilveira@byupathway.edu
-  password: havaianas99
-
-- **Employee**  
-  Email: `employee@dealer.com`  
-
-- **User**  
-  Email: `customer@dealer.com`  
-
-👉 Use your class test password for all accounts.
+| Role     | Email                 |
+|----------|-----------------------|
+| Owner    | owner@dealer.com      |
+| Employee | employee@dealer.com   |
+| User     | customer@dealer.com   |
 
 ---
 
 ## ⚙️ How to Run Locally
-
 ```bash
 npm install
 npm run dev
+```

@@ -12,6 +12,7 @@ import {
   deleteCategory,
 } from "../models/categoryModel.js"
 import { getAllServiceRequests } from "../models/serviceModel.js"
+import { query } from "../models/db.js"
 
 export async function getOwnerDashboard(req, res, next) {
   try {
@@ -34,6 +35,19 @@ export async function postUpdateUserRole(req, res, next) {
     const validRoles = ["user", "employee", "owner"]
     if (!validRoles.includes(role)) return res.status(400).send("Invalid role")
     await updateUserRole(userId, role)
+    res.redirect("/owner")
+  } catch (err) {
+    next(err)
+  }
+}
+
+export async function postDeleteUser(req, res, next) {
+  try {
+    const userId = Number(req.params.id)
+    if (userId === req.session.user.id) {
+      return res.status(400).send("You cannot delete your own account.")
+    }
+    await query("DELETE FROM users WHERE id = $1", [userId])
     res.redirect("/owner")
   } catch (err) {
     next(err)

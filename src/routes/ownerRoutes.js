@@ -3,6 +3,7 @@ import { requireRole } from "../middleware/auth.js"
 import {
   getOwnerDashboard,
   postUpdateUserRole,
+  postDeleteUser,
   postAddCategory,
   postEditCategory,
   postDeleteCategory,
@@ -15,6 +16,7 @@ const router = Router()
 
 router.get("/", requireRole("owner"), getOwnerDashboard)
 router.post("/users/:id/role", requireRole("owner"), postUpdateUserRole)
+router.post("/users/:id/delete", requireRole("owner"), postDeleteUser)
 router.post("/categories", requireRole("owner"), postAddCategory)
 router.post("/categories/:id/edit", requireRole("owner"), postEditCategory)
 router.post("/categories/:id/delete", requireRole("owner"), postDeleteCategory)
