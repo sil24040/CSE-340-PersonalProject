@@ -4,6 +4,9 @@ import {
   createVehicle,
   updateVehicle,
   deleteVehicle,
+  addVehicleImage,
+  deleteVehicleImage,
+  getVehicleImages,
 } from "../models/vehicleModel.js"
 import {
   getAllCategories,
@@ -22,7 +25,16 @@ export async function getOwnerDashboard(req, res, next) {
       getAllVehicles(),
       getAllServiceRequests(),
     ])
-    res.render("owner", { users, categories, vehicles, requests })
+
+    // Fetch images for each vehicle
+    const vehiclesWithImages = await Promise.all(
+      vehicles.map(async (v) => {
+        const images = await getVehicleImages(v.id)
+        return { ...v, images }
+      })
+    )
+
+    res.render("owner", { users, categories, vehicles: vehiclesWithImages, requests })
   } catch (err) {
     next(err)
   }
@@ -47,7 +59,6 @@ export async function postDeleteUser(req, res, next) {
     if (userId === req.session.user.id) {
       return res.status(400).send("You cannot delete your own account.")
     }
-    // Delete linked data first to avoid foreign key errors
     await query("DELETE FROM reviews WHERE user_id = $1", [userId])
     await query("DELETE FROM service_requests WHERE user_id = $1", [userId])
     await query("DELETE FROM users WHERE id = $1", [userId])
@@ -130,6 +141,28 @@ export async function postDeleteVehicle(req, res, next) {
   try {
     const vehicleId = Number(req.params.id)
     await deleteVehicle(vehicleId)
+    res.redirect("/owner")
+  } catch (err) {
+    next(err)
+  }
+}
+
+export async function postAddVehicleImage(req, res, next) {
+  try {
+    const vehicleId = Number(req.params.id)
+    const { image_url } = req.body
+    if (!image_url || !image_url.trim()) return res.status(400).send("Missing image URL")
+    await addVehicleImage(vehicleId, image_url.trim())
+    res.redirect("/owner")
+  } catch (err) {
+    next(err)
+  }
+}
+
+export async function postDeleteVehicleImage(req, res, next) {
+  try {
+    const imageId = Number(req.params.id)
+    await deleteVehicleImage(imageId)
     res.redirect("/owner")
   } catch (err) {
     next(err)

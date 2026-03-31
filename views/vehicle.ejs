@@ -4,24 +4,26 @@
   <meta charset="utf-8" />
   <title><%= vehicle.title %></title>
   <link rel="stylesheet" href="/style.css">
+  <style>
+    .image-gallery {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .image-gallery img {
+      width: 100%;
+      max-width: 400px;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+  </style>
 </head>
 <body>
 
-  <nav class="nav">
-    <a href="/vehicles">Home</a>
-    <a href="/profile">Profile</a>
-    <a href="/employee">Employee Dashboard</a>
-    <a href="/owner">Owner Dashboard</a>
-    <a href="/contact">Contact</a>
-
-    <% if (currentUser) { %>
-      <span class="small-muted">Logged in as <strong><%= currentUser.name %></strong></span>
-      <a href="/logout">Logout</a>
-    <% } else { %>
-      <a href="/login">Login</a>
-      <a href="/register">Register</a>
-    <% } %>
-  </nav>
+  <%- include('partials/nav') %>
 
   <main class="container">
 
@@ -29,13 +31,29 @@
       <div>
         <p class="eyebrow">Vehicle Details</p>
         <h1><%= vehicle.title %></h1>
-        <p class="hero-text"><strong>Price:</strong> $<%= vehicle.price %></p>
+        <p class="hero-text"><strong>Price:</strong> $<%= Number(vehicle.price).toFixed(2) %></p>
+        <% if (vehicle.available) { %>
+          <span class="badge badge-available">Available</span>
+        <% } else { %>
+          <span class="badge badge-unavailable">Unavailable</span>
+        <% } %>
       </div>
     </div>
 
+    <% if (images && images.length > 0) { %>
+      <div class="card">
+        <h2 class="section-title">Photos</h2>
+        <div class="image-gallery">
+          <% images.forEach(img => { %>
+            <img src="<%= img.image_url %>" alt="<%= vehicle.title %>" />
+          <% }) %>
+        </div>
+      </div>
+    <% } %>
+
     <div class="card">
       <h2 class="section-title">Description</h2>
-      <p><%= vehicle.description %></p>
+      <p><%= vehicle.description || "No description provided." %></p>
     </div>
 
     <h2 class="section-title">Reviews</h2>
@@ -43,31 +61,52 @@
     <% if (reviews && reviews.length > 0) { %>
       <% reviews.forEach(review => { %>
         <div class="card">
-          <p><strong><%= review.name %></strong></p>
-          <p>Rating: <%= review.rating %> / 5</p>
+          <p><strong><%= review.name %></strong>
+            <span class="small-muted" style="margin-left:8px;">
+              <%= new Date(review.created_at).toLocaleDateString() %>
+            </span>
+          </p>
+          <p>Rating: <strong><%= review.rating %> / 5</strong></p>
           <p><%= review.comment %></p>
+
+          <% if (currentUser && currentUser.id === review.user_id) { %>
+            <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
+              <a class="btn secondary" href="/reviews/<%= review.id %>/edit">Edit</a>
+              <form method="POST" action="/reviews/<%= review.id %>/delete"
+                    onsubmit="return confirm('Delete this review?');">
+                <button type="submit" style="background:#ef4444;">Delete</button>
+              </form>
+            </div>
+          <% } %>
+
+          <% if (currentUser && (currentUser.role === 'employee' || currentUser.role === 'owner') && currentUser.id !== review.user_id) { %>
+            <div style="margin-top:10px;">
+              <form method="POST" action="/reviews/<%= review.id %>/delete"
+                    onsubmit="return confirm('Remove this review?');">
+                <button type="submit" style="background:#ef4444;">Remove Review</button>
+              </form>
+            </div>
+          <% } %>
         </div>
       <% }) %>
     <% } else { %>
-      <p>No reviews yet.</p>
+      <p>No reviews yet. Be the first!</p>
     <% } %>
 
     <% if (currentUser) { %>
       <div class="card">
-        <h3>Leave Review</h3>
+        <h3>Leave a Review</h3>
         <form method="POST" action="/vehicles/<%= vehicle.id %>/reviews">
           <label>Rating</label>
           <select name="rating" required>
-            <option value="5">5</option>
-            <option value="4">4</option>
-            <option value="3">3</option>
-            <option value="2">2</option>
-            <option value="1">1</option>
+            <option value="5">⭐⭐⭐⭐⭐ — 5</option>
+            <option value="4">⭐⭐⭐⭐ — 4</option>
+            <option value="3">⭐⭐⭐ — 3</option>
+            <option value="2">⭐⭐ — 2</option>
+            <option value="1">⭐ — 1</option>
           </select>
-
           <label>Comment</label>
-          <textarea name="comment" required></textarea>
-
+          <textarea name="comment" placeholder="Share your experience..." required></textarea>
           <button type="submit">Submit Review</button>
         </form>
       </div>
@@ -75,8 +114,8 @@
       <div class="card">
         <h3>Request Service</h3>
         <form method="POST" action="/vehicles/<%= vehicle.id %>/request">
-          <label>Description</label>
-          <textarea name="description" required></textarea>
+          <label>Description of service needed</label>
+          <textarea name="description" placeholder="Describe what service you need..." required></textarea>
           <button type="submit">Submit Request</button>
         </form>
       </div>

@@ -10,6 +10,8 @@ import {
   postAddVehicle,
   postEditVehicle,
   postDeleteVehicle,
+  postAddVehicleImage,
+  postDeleteVehicleImage,
 } from "../controllers/ownerController.js"
 
 const router = Router()
@@ -23,5 +25,7 @@ router.post("/categories/:id/delete", requireRole("owner"), postDeleteCategory)
 router.post("/vehicles", requireRole("owner"), postAddVehicle)
 router.post("/vehicles/:id/edit", requireRole("owner"), postEditVehicle)
 router.post("/vehicles/:id/delete", requireRole("owner"), postDeleteVehicle)
+router.post("/vehicles/:id/images", requireRole("owner"), postAddVehicleImage)
+router.post("/images/:id/delete", requireRole("owner"), postDeleteVehicleImage)
 
 export default router

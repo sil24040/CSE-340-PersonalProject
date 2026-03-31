@@ -5,9 +5,36 @@ export async function getAllVehicles() {
   return result.rows
 }
 
+export async function getVehiclesByCategory(categoryId) {
+  const result = await query(
+    "SELECT * FROM vehicles WHERE category_id = $1 ORDER BY id",
+    [categoryId]
+  )
+  return result.rows
+}
+
 export async function getVehicleById(id) {
   const result = await query("SELECT * FROM vehicles WHERE id = $1", [id])
   return result.rows[0] || null
+}
+
+export async function getVehicleImages(vehicleId) {
+  const result = await query(
+    "SELECT * FROM vehicle_images WHERE vehicle_id = $1 ORDER BY id",
+    [vehicleId]
+  )
+  return result.rows
+}
+
+export async function addVehicleImage(vehicleId, imageUrl) {
+  await query(
+    "INSERT INTO vehicle_images (vehicle_id, image_url) VALUES ($1, $2)",
+    [vehicleId, imageUrl]
+  )
+}
+
+export async function deleteVehicleImage(imageId) {
+  await query("DELETE FROM vehicle_images WHERE id = $1", [imageId])
 }
 
 export async function createVehicle(categoryId, title, description, price, available) {

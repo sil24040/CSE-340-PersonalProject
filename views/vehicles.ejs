@@ -7,21 +7,7 @@
 </head>
 <body>
 
-  <nav class="nav">
-    <a href="/vehicles">Home</a>
-    <a href="/profile">Profile</a>
-    <a href="/employee">Employee Dashboard</a>
-    <a href="/owner">Owner Dashboard</a>
-    <a href="/contact">Contact</a>
-
-    <% if (currentUser) { %>
-      <span class="small-muted">Logged in as <strong><%= currentUser.name %></strong></span>
-      <a href="/logout">Logout</a>
-    <% } else { %>
-      <a href="/login">Login</a>
-      <a href="/register">Register</a>
-    <% } %>
-  </nav>
+  <%- include('partials/nav') %>
 
   <main class="container">
 
@@ -33,7 +19,6 @@
           Browse our inventory, view vehicle details, leave reviews, and request service in one place.
         </p>
       </div>
-
       <div class="hero-actions">
         <a class="btn" href="#inventory">View Inventory</a>
         <a class="btn secondary" href="/contact">Contact Us</a>
@@ -43,7 +28,7 @@
     <section class="stats">
       <div class="stat-card">
         <strong><%= vehicles.length %></strong>
-        <span>Vehicles Available</span>
+        <span>Vehicles<%= selectedCategory ? ' in ' + selectedCategory.name : ' in Inventory' %></span>
       </div>
       <div class="stat-card">
         <strong>3</strong>
@@ -56,7 +41,22 @@
     </section>
 
     <section id="inventory">
-      <h2 class="section-title">Inventory</h2>
+      <h2 class="section-title">Browse by Category</h2>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px;">
+        <a class="btn <%= !selectedCategory ? '' : 'secondary' %>" href="/vehicles">All Vehicles</a>
+        <% categories.forEach(cat => { %>
+          <a class="btn <%= selectedCategory && selectedCategory.id === cat.id ? '' : 'secondary' %>"
+             href="/vehicles?category=<%= cat.id %>">
+            <%= cat.name %>
+          </a>
+        <% }) %>
+      </div>
+
+      <% if (selectedCategory) { %>
+        <p class="small-muted" style="margin-bottom:16px;">
+          Showing <strong><%= vehicles.length %></strong> vehicle<%= vehicles.length !== 1 ? 's' : '' %> in <strong><%= selectedCategory.name %></strong>
+        </p>
+      <% } %>
 
       <% if (vehicles.length > 0) { %>
         <div class="vehicle-grid">
@@ -70,13 +70,10 @@
                   <span class="badge badge-unavailable">Unavailable</span>
                 <% } %>
               </div>
-
               <p class="price">$<%= Number(vehicle.price).toFixed(2) %></p>
-
               <p class="small-muted">
                 <%= vehicle.description || "No description available." %>
               </p>
-
               <div class="card-actions">
                 <a class="btn" href="/vehicles/<%= vehicle.id %>">View Details</a>
               </div>
@@ -84,7 +81,7 @@
           <% }) %>
         </div>
       <% } else { %>
-        <p>No vehicles available right now.</p>
+        <p>No vehicles found<%= selectedCategory ? ' in this category' : '' %>.</p>
       <% } %>
     </section>
 
