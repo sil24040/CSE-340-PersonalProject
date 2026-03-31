@@ -47,6 +47,9 @@ export async function postDeleteUser(req, res, next) {
     if (userId === req.session.user.id) {
       return res.status(400).send("You cannot delete your own account.")
     }
+    // Delete linked data first to avoid foreign key errors
+    await query("DELETE FROM reviews WHERE user_id = $1", [userId])
+    await query("DELETE FROM service_requests WHERE user_id = $1", [userId])
     await query("DELETE FROM users WHERE id = $1", [userId])
     res.redirect("/owner")
   } catch (err) {
