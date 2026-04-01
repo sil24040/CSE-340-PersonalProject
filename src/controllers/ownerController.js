@@ -6,7 +6,6 @@ import {
   deleteVehicle,
   addVehicleImage,
   deleteVehicleImage,
-  getVehicleImages,
 } from "../models/vehicleModel.js"
 import {
   getAllCategories,
@@ -19,20 +18,18 @@ import { query } from "../models/db.js"
 
 export async function getOwnerDashboard(req, res, next) {
   try {
-    const [users, categories, vehicles, requests] = await Promise.all([
+    const [users, categories, vehicles, requests, imgResult] = await Promise.all([
       getAllUsers(),
       getAllCategories(),
       getAllVehicles(),
       getAllServiceRequests(),
+      query("SELECT * FROM vehicle_images ORDER BY id"),
     ])
 
-    // Fetch images for each vehicle
-    const vehiclesWithImages = await Promise.all(
-      vehicles.map(async (v) => {
-        const images = await getVehicleImages(v.id)
-        return { ...v, images }
-      })
-    )
+    const vehiclesWithImages = vehicles.map(v => ({
+      ...v,
+      images: imgResult.rows.filter(img => img.vehicle_id === v.id)
+    }))
 
     res.render("owner", { users, categories, vehicles: vehiclesWithImages, requests })
   } catch (err) {

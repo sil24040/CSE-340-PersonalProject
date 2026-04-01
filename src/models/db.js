@@ -19,7 +19,10 @@ if (fs.existsSync(certPath)) {
 
 const pool = new Pool({
   connectionString: process.env.DB_URL,
-  ssl: sslConfig
+  ssl: sslConfig,
+  max: 3,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000,
 })
 
 export const query = (text, params) => pool.query(text, params)
