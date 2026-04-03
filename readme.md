@@ -74,8 +74,6 @@ This site serves as a used car dealership platform where customers can browse in
 
 ## 👤 Test Accounts
 
-Use `P@$$w0rd!` as the password for all test accounts.
-
 | Role     | Email                 |
 |----------|-----------------------|
 | Owner    | owner@dealer.com      |
@@ -89,3 +87,8 @@ Use `P@$$w0rd!` as the password for all test accounts.
 npm install
 npm run dev
 ```
+## ⚠️ Known Limitations
+
+- Vehicle images are URL-based only (no file upload support)
+- Free tier PostgreSQL has a maximum of ~5 connections
+- No pagination on inventory or dashboard lists
