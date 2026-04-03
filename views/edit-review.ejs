@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Edit Review</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <%- include('partials/nav') %>
+  <main class="container narrow">
+    <div class="hero" style="display:block;">
+      <p class="eyebrow">Your Review</p>
+      <h1>Edit Review</h1>
+      <p class="hero-text">Update your review for <strong><%= review.vehicle_title %></strong>.</p>
+    </div>
+    <% if (error) { %>
+      <div class="notice error"><%= error %></div>
+    <% } %>
+    <div class="card">
+      <form method="POST" action="/reviews/<%= review.id %>/edit">
+        <label>Rating</label>
+        <select name="rating" required>
+          <option value="5" <%= review.rating == 5 ? 'selected' : '' %>>⭐⭐⭐⭐⭐ — 5</option>
+          <option value="4" <%= review.rating == 4 ? 'selected' : '' %>>⭐⭐⭐⭐ — 4</option>
+          <option value="3" <%= review.rating == 3 ? 'selected' : '' %>>⭐⭐⭐ — 3</option>
+          <option value="2" <%= review.rating == 2 ? 'selected' : '' %>>⭐⭐ — 2</option>
+          <option value="1" <%= review.rating == 1 ? 'selected' : '' %>>⭐ — 1</option>
+        </select>
+        <label>Comment</label>
+        <textarea name="comment" required><%= review.comment %></textarea>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button type="submit">Save Changes</button>
+          <a class="btn secondary" href="/vehicles/<%= review.vehicle_id %>">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </main>
+</body>
+</html>
